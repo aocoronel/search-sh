@@ -20,14 +20,19 @@
       search = pkgs.stdenv.mkDerivation {
         name = "search";
         src = ./src;
-        nativeBuildInputs = [pkgs.makeWrapper pythonWithPackages];
+        nativeBuildInputs = [
+          pkgs.fzf
+          pkgs.makeWrapper
+          pkgs.rofi
+          pythonWithPackages
+        ];
         installPhase = ''
           mkdir -p $out/bin
           cp search $out/bin/search
           cp leta-searcher.py $out/bin/leta-searcher.py
           chmod +x $out/bin/search $out/bin/leta-searcher.py
           wrapProgram "$out/bin/search" \
-            --prefix PATH : "${pkgs.lib.makeBinPath [pythonWithPackages]}"
+            --prefix PATH : "${pkgs.lib.makeBinPath [pythonWithPackages pkgs.fzf pkgs.rofi]}"
         '';
         meta = {
           description = "Leta Searcher (CLI)";
